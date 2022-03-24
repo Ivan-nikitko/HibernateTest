@@ -13,6 +13,7 @@ public class Main {
 
         BrandDAO brandDAO = new BrandDAO(sessionFactory);
 
+//      Generate test entities, uncomment for use
 //        for (int i = 0; i < 10; i++) {
 //            Brand brand = new Brand();
 //            brand.setName("Brand"+i);

@@ -71,8 +71,18 @@ public class BrandDAO implements DAO<Brand, Long> {
         }
     }
 
+    public Brand readSqlWithParameter(Long id) {
+        try (Session session = factory.openSession()) {
+            NativeQuery sqlQuery = session.createSQLQuery("select * from application.car_brand where id = :id");
+            sqlQuery.setParameter("id", id);
+            sqlQuery.addEntity(Brand.class);
+            Brand singleResult = (Brand) sqlQuery.getSingleResult();
+            return singleResult;
+        }
+    }
+
+
     public List<Brand> criteriaExample() {
-        Query<Brand> query;
         List<Brand> results;
         try (Session session = factory.openSession()) {
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
@@ -80,7 +90,7 @@ public class BrandDAO implements DAO<Brand, Long> {
             Root<Brand> root = criteriaQuery.from(Brand.class);
             Predicate predicate = criteriaBuilder.between(root.get("id"), 1, 3);
             criteriaQuery.select(root).where(predicate);
-            query = session.createQuery(criteriaQuery);
+            Query<Brand> query = session.createQuery(criteriaQuery);
             results = query.getResultList();
         }
         return results;
@@ -95,7 +105,7 @@ public class BrandDAO implements DAO<Brand, Long> {
             Root<Brand> root = criteriaQuery.from(Brand.class);
 
             Predicate[] predicates = new Predicate[2];
-            predicates[0] = criteriaBuilder.like(root.get("name"),"Brand2");
+            predicates[0] = criteriaBuilder.like(root.get("name"),"Brand5");
             predicates[1] = criteriaBuilder.ge(root.get("id"), 3);
 
             criteriaQuery.select(root).where(predicates);
@@ -105,17 +115,7 @@ public class BrandDAO implements DAO<Brand, Long> {
         return results;
     }
 
-    public Brand readSqlWithParameter(Long id) {
-        try (Session session = factory.openSession()) {
-            NativeQuery sqlQuery = session.createSQLQuery("select * from application.car_brand where id = :id");
-            sqlQuery.setParameter("id", id);
-            sqlQuery.addEntity(Brand.class);
-            Brand singleResult = (Brand) sqlQuery.getSingleResult();
-           return singleResult;
-        }
 
-
-    }
 
 
 }
