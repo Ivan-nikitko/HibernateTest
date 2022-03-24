@@ -1,0 +1,15 @@
+<hibernate-mapping xmlns="http://www.hibernate.org/xsd/hibernate-mapping">
+    <class name="pl.nikitko.model.Brand" table="car_brand">
+
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="sequence">
+                <param name="sequence">pk_car_brand</param>
+            </generator>
+        </id>
+
+        <property name="name" column="name"/>
+        <property name="country" column="country"/>
+    </class>
+
+</hibernate-mapping>
