@@ -1,8 +1,16 @@
 package pl.nikitko.model;
 
 import javax.persistence.*;
+import java.util.List;
 
-@Table(name = "car_brand")
+@NamedQueries({
+        @NamedQuery(name = "brand.findAll", query = "from Brand B"),
+        @NamedQuery(name = "brand.findByName",
+                query = "from Brand b where b.name=:name"),
+})
+
+
+@Table(name = "brand", schema = "application")
 @Entity
 public class Brand {
     @Id
@@ -13,7 +21,19 @@ public class Brand {
     @Column
     private String country;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "brand")
+    private List<Car> carList;
+
     public Brand() {
+    }
+
+
+    public List<Car> getCarList() {
+        return carList;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getId() {

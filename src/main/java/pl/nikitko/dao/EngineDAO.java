@@ -2,50 +2,41 @@ package pl.nikitko.dao;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.query.NativeQuery;
-import org.hibernate.query.Query;
 import pl.nikitko.dao.api.DAO;
-import pl.nikitko.model.Brand;
-
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.criteria.*;
-import java.util.List;
+import pl.nikitko.model.Car;
+import pl.nikitko.model.Engine;
 
 
-
-
-
-public class BrandDAO implements DAO<Brand, Long> {
+public class EngineDAO implements DAO<Engine, Long> {
     private final SessionFactory factory;
 
-    public BrandDAO(SessionFactory factory) {
+    public EngineDAO(SessionFactory factory) {
         this.factory = factory;
     }
 
 
     @Override
-    public void create(Brand brand) {
+    public void create(Engine engine) {
         try (Session session = factory.openSession()) {
             session.beginTransaction();
-            session.save(brand);
+            session.save(engine);
             session.getTransaction().commit();
         }
     }
 
     @Override
-    public Brand read(Long id) {
+    public Engine read(Long id) {
         try (Session session = factory.openSession()) {
-            Brand result = session.get(Brand.class, id);
+            Engine result = session.get(Engine.class, id);
             return result;
         }
     }
 
     @Override
-    public void update(Brand brand) {
+    public void update(Engine engine) {
         try (Session session = factory.openSession()) {
             session.beginTransaction();
-            session.update(brand);
+            session.update(engine);
             session.getTransaction().commit();
         }
     }
@@ -54,15 +45,16 @@ public class BrandDAO implements DAO<Brand, Long> {
     public void delete(Long id) {
         try (Session session = factory.openSession()) {
             session.beginTransaction();
-            Brand read = read(id);
+            Engine read = read(id);
             if (read != null) {
                 session.delete(read(id));
                 session.getTransaction().commit();
             } else {
-                System.out.println("Brand not found, id = " + id);
+                System.out.println("Engine not found, id = " + id);
             }
         }
     }
+/*
 
     public List<Brand> readSqlQuery(String sqlQuery) {
         try (Session session = factory.openSession()) {
@@ -155,6 +147,7 @@ public class BrandDAO implements DAO<Brand, Long> {
         }
         return results;
     }
+*/
 
 
 
