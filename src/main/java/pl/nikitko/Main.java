@@ -1,7 +1,10 @@
 package pl.nikitko;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 import pl.nikitko.dao.BrandDAO;
 import pl.nikitko.dao.CarDAO;
 import pl.nikitko.dao.OwnerDAO;
@@ -10,6 +13,7 @@ import pl.nikitko.model.Car;
 import pl.nikitko.model.Owner;
 import pl.nikitko.model.api.WheelDrive;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,89 +24,20 @@ public class Main {
 //        SessionFactory sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 
-        //   BrandDAO brandDAO = new BrandDAO(sessionFactory);
-        CarDAO carDAO = new CarDAO(sessionFactory);
         OwnerDAO ownerDAO = new OwnerDAO(sessionFactory);
         BrandDAO brandDAO = new BrandDAO(sessionFactory);
 
         generateData(sessionFactory);
 
-//      Generate test entities, uncomment for use
-//        for (int i = 0; i < 10; i++) {
-//            Brand brand = new Brand();
-//            brand.setName("Brand"+i);
-//            brand.setCountry("Country"+i);
-//            brandDAO.create(brand);
-//        }
 
-//        System.out.println("*************** readSqlQuery **************");
-//
-//        String sqlQuery = "SELECT * FROM application.car_brand";
-//        List<Brand> brands = brandDAO.readSqlQuery(sqlQuery);
-//        for (Brand brand : brands) {
-//            System.out.println(brand);
-//        }
-
-//        System.out.println("*************** criteriaExample **************");
-//
-//        List<Brand> ownerList = brandDAO.criteriaExample();
-//        for (Brand currentBrand : ownerList) {
-//            System.out.println(currentBrand);
-//        }
-//
-//
-//        System.out.println("*************** criteriaPredicatesArrayExample **************");
-//
-//        List<Brand> brandList = brandDAO.criteriaPredicatesArrayExample();
-//        for (Brand currentBrand : brandList) {
-//            System.out.println(currentBrand);
-//        }
-//
-//
-//        System.out.println("*************** readSqlWithParameter **************");
-//
-//        Brand brand = brandDAO.readSqlWithParameter(2L);
-//        System.out.println(brand);
-
-
-//        List brands = brandDAO.readHQL();
-//        for (Object brand : brands) {
-//            System.out.println(brand);
-//        }
-
-        //   brandDAO.readHQ1();
-        //   brandDAO.readHQ2();
-
-        //      carDAO.readHQ1();
-        //   carDAO.readHQL();
-
-
-//        List<Car> carList = carDAO.criteriaExample();
-//        for (Car car : carList) {
-//            System.out.println(car);
-//        }
-
-
-//        System.out.println("*************** criteriaExample **************");
-//
-//        List<Owner> ownerList = ownerDAO.criteriaExample();
-//        for (Owner owner : ownerList) {
-//            System.out.println(owner);
-//        }
         System.out.println("*****************************");
 
         Owner owner = ownerDAO.read(1L);
 
-        System.out.println("************* entriesByVin ****************");
 
-        Set<Map.Entry<Integer, Car>> entriesByVin = owner.getCarsByVin().entrySet();
-        for (Map.Entry<Integer, Car> entry : entriesByVin) {
-            System.out.println(entry.getKey()+" || "+ entry.getValue());
-        }
+        System.out.println("*********** carsByBrand ******************");
 
-        System.out.println("*********** entriesByBrand ******************");
-
-        Map<Brand, Car> carMap = owner.getCarMap();
+        Map<Brand, Car> carMap = owner.getCarsByBrand();
         Set<Map.Entry<Brand, Car>> entries = carMap.entrySet();
         for (Map.Entry<Brand, Car> entry : entries) {
             System.out.println(entry.getKey() + " || " + entry.getValue());
@@ -119,21 +54,42 @@ public class Main {
             System.out.println(wheelDriveCarEntry.getKey()+ " || "+wheelDriveCarEntry.getValue());
         }
 
-        System.out.println("************ CarByBrand *****************");
 
-        Brand brand = brandDAO.read(2L);
-        List<Car> carList = brand.getCarList();
-        for (Car car : carList) {
-            System.out.println(car.getCarModel());
+        System.out.println("************ CarModelByVin *****************");
+        System.out.println(owner.getCarsModelByVin());
+
+
+        System.out.println("************* CarsByVin ****************");
+        Set<Map.Entry<Integer, Car>> entriesByVin = owner.getCarsByVin().entrySet();
+        entriesByVin.stream().map(entry -> entry.getKey() + " || " + entry.getValue()).forEach(System.out::println);
+
+
+        System.out.println("************ CarByDate *****************");
+        for (Map.Entry<Date, Car> dateCarEntry : owner.getCarsByDate().entrySet()) {
+            System.out.println(dateCarEntry.getKey() + "||" + dateCarEntry.getValue());
         }
 
+        Query select_e_from_engine_e;
+        try (Session session = sessionFactory.openSession()) {
+
+            List select_en_from_engine_en = session.createQuery("select en from Engine en").list();
+
+        }
+
+
     }
+
+
 
     private static void generateData(SessionFactory sessionFactory) {
         DataGenerator dataGenerator = new DataGenerator(sessionFactory);
         dataGenerator.generateBrands();
         dataGenerator.generateEngines();
         dataGenerator.generateOwners();
-        dataGenerator.generateCars();
+        try {
+            dataGenerator.generateCars();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

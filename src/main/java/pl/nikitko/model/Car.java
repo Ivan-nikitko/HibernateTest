@@ -3,6 +3,7 @@ package pl.nikitko.model;
 import pl.nikitko.model.api.WheelDrive;
 
 import javax.persistence.*;
+import java.util.Date;
 
 
 @Table(name = "car", schema = "application")
@@ -19,11 +20,15 @@ public class Car {
     private int vin;
 
     @ManyToOne
-    @JoinColumn(name = "brand_id")
+    @JoinColumn(name = "brand_id1")
+    @JoinColumn(name = "brand_id2")
     private Brand brand;
 
+
     @ManyToOne
-    private Engine engine;
+    @JoinColumn(name = "engine_firstidpart")
+    @JoinColumn(name = "engine_secondidpart")
+    private DieselEngine dieselEngine;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn (name = "owner_id")
@@ -31,6 +36,18 @@ public class Car {
 
     @Enumerated(EnumType.STRING)
     private WheelDrive wheelDrive;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_on")
+    private Date createdOn;
+
+    public Date getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
+    }
 
     public void setOwner(Owner owner) {
         this.owner = owner;
@@ -55,12 +72,12 @@ public class Car {
 
 
 
-    public Engine getEngine() {
-        return engine;
+    public DieselEngine getEngine() {
+        return dieselEngine;
     }
 
-    public void setEngine(Engine engine) {
-        this.engine = engine;
+    public void setEngine(DieselEngine dieselEngine) {
+        this.dieselEngine = dieselEngine;
     }
 
     public void setCarModel(String carModel) {
@@ -94,7 +111,7 @@ public class Car {
                 ", carModel='" + carModel + '\'' +
                 ", vin=" + vin +
                 ", brand=" + brand +
-                ", engine=" + engine +
+                ", engine=" + dieselEngine +
               //  ", owner=" + owner +
                 ", wheelDrive=" + wheelDrive +
                 '}';

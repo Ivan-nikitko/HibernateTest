@@ -3,11 +3,11 @@ package pl.nikitko.dao;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import pl.nikitko.dao.api.DAO;
-import pl.nikitko.model.Car;
-import pl.nikitko.model.Engine;
+import pl.nikitko.model.DieselEngine;
+import pl.nikitko.model.api.EngineId;
 
 
-public class EngineDAO implements DAO<Engine, Long> {
+public class EngineDAO implements DAO<DieselEngine, Long> {
     private final SessionFactory factory;
 
     public EngineDAO(SessionFactory factory) {
@@ -16,27 +16,31 @@ public class EngineDAO implements DAO<Engine, Long> {
 
 
     @Override
-    public void create(Engine engine) {
+    public void create(DieselEngine dieselEngine) {
         try (Session session = factory.openSession()) {
             session.beginTransaction();
-            session.save(engine);
+            session.save(dieselEngine);
             session.getTransaction().commit();
         }
     }
 
     @Override
-    public Engine read(Long id) {
+    public DieselEngine read(Long aLong) {
+        return null;
+    }
+
+    public DieselEngine read(EngineId id) {
         try (Session session = factory.openSession()) {
-            Engine result = session.get(Engine.class, id);
+            DieselEngine result = session.get(DieselEngine.class, id);
             return result;
         }
     }
 
     @Override
-    public void update(Engine engine) {
+    public void update(DieselEngine dieselEngine) {
         try (Session session = factory.openSession()) {
             session.beginTransaction();
-            session.update(engine);
+            session.update(dieselEngine);
             session.getTransaction().commit();
         }
     }
@@ -45,7 +49,7 @@ public class EngineDAO implements DAO<Engine, Long> {
     public void delete(Long id) {
         try (Session session = factory.openSession()) {
             session.beginTransaction();
-            Engine read = read(id);
+            DieselEngine read = read(id);
             if (read != null) {
                 session.delete(read(id));
                 session.getTransaction().commit();

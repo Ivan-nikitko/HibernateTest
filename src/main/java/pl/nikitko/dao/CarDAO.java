@@ -82,7 +82,7 @@ public class CarDAO implements DAO<Car, Long> {
 //            return singleResult;
 //        }
 //    }
-//
+////
 //    public List readHQL() {
 //        try (Session session = factory.openSession()) {
 //            Query sqlQuery = session.createQuery("select *  from Car C where c.id = 1");

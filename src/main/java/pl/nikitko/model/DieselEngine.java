@@ -1,23 +1,19 @@
 package pl.nikitko.model;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import pl.nikitko.model.api.Engine;
 
 import javax.persistence.*;
 import java.util.List;
 
 
-@Table(name = "engine", schema = "application")
+@Table(name = "diesel_engines", schema = "application")
 @Entity
-public class Engine {
-    @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private Long id;
+public class DieselEngine extends Engine {
 
     @Column(name = "engine_model")
     private String engineModel;
 
-    @OneToMany(mappedBy = "engine")
+    @OneToMany(mappedBy = "dieselEngine")
     private List<Car> cars = new java.util.ArrayList<>();
 
     public void setCars(List<Car> cars) {
@@ -33,12 +29,14 @@ public class Engine {
         this.engineModel = engineModel;
     }
 
-    public Engine() {
+    public DieselEngine() {
     }
+
 
     @Override
     public String toString() {
-        return "Engine{" +
+        return "DieselEngine{" +
+                "power ='" + super.getPower() + '\'' +
                 "engineModel='" + engineModel + '\'' +
                 '}';
     }

@@ -6,9 +6,13 @@ import pl.nikitko.dao.CarDAO;
 import pl.nikitko.dao.EngineDAO;
 import pl.nikitko.dao.OwnerDAO;
 import pl.nikitko.model.*;
+import pl.nikitko.model.api.BrandId;
+import pl.nikitko.model.api.EngineId;
 import pl.nikitko.model.api.WheelDrive;
 
+import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 public class DataGenerator {
 
@@ -28,6 +32,8 @@ public class DataGenerator {
     public void generateBrands() {
         for (int i = 0; i < 10; i++) {
             Brand brand = new Brand();
+            brand.setFirstIdPart((long)i);
+            brand.setSecondIdPart(i+10L);
             brand.setName("Brand_" + i);
             brand.setCountry("Country_" + i);
             brandDAO.create(brand);
@@ -36,9 +42,11 @@ public class DataGenerator {
 
     public void generateEngines() {
         for (int i = 0; i < 10; i++) {
-            Engine engine = new Engine();
-            engine.setEngineModel("E_Model_" + i);
-            engineDAO.create(engine);
+            DieselEngine dieselEngine = new DieselEngine();
+            dieselEngine.setId(new EngineId((long)i,i+10L));
+            dieselEngine.setEngineModel("E_Model_" + i);
+            dieselEngine.setPower(i*3+50);
+            engineDAO.create(dieselEngine);
         }
     }
 
@@ -53,14 +61,17 @@ public class DataGenerator {
 
     }
 
-    public void generateCars() {
+    public void generateCars() throws InterruptedException {
         for (int i = 1; i <= 10; i++) {
             Car car = new Car();
-            car.setBrand(brandDAO.read((long) i));
-            car.setEngine(engineDAO.read((long) i));
+            Brand read = brandDAO.read(new BrandId((long) i-1, i + 9L));
+            car.setBrand(read);
+            car.setEngine(engineDAO.read(new EngineId((long) i-1, i + 9L)));
             car.setCarModel("Model_" + i);
             car.setVin(ThreadLocalRandom.current().nextInt(1000000, 9999999));
             car.setOwner(ownerDAO.read((long) ThreadLocalRandom.current().nextInt(1, 3)));
+            car.setCreatedOn(new Date());
+            TimeUnit.MILLISECONDS.sleep(10L);
             if (ThreadLocalRandom.current().nextInt(1, 3) == 1) {
                 car.setWheelDrive(WheelDrive.AWD);
             } else {

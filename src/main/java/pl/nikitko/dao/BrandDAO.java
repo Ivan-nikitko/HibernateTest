@@ -6,6 +6,7 @@ import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import pl.nikitko.dao.api.DAO;
 import pl.nikitko.model.Brand;
+import pl.nikitko.model.api.BrandId;
 
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -16,7 +17,7 @@ import java.util.List;
 
 
 
-public class BrandDAO implements DAO<Brand, Long> {
+public class BrandDAO  {
     private final SessionFactory factory;
 
     public BrandDAO(SessionFactory factory) {
@@ -24,7 +25,7 @@ public class BrandDAO implements DAO<Brand, Long> {
     }
 
 
-    @Override
+
     public void create(Brand brand) {
         try (Session session = factory.openSession()) {
             session.beginTransaction();
@@ -33,15 +34,17 @@ public class BrandDAO implements DAO<Brand, Long> {
         }
     }
 
-    @Override
-    public Brand read(Long id) {
+
+
+
+
+    public Brand read(BrandId id) {
         try (Session session = factory.openSession()) {
-            Brand result = session.get(Brand.class, id);
-            return result;
+            return session.get(Brand.class, id);
         }
     }
 
-    @Override
+
     public void update(Brand brand) {
         try (Session session = factory.openSession()) {
             session.beginTransaction();
@@ -50,19 +53,19 @@ public class BrandDAO implements DAO<Brand, Long> {
         }
     }
 
-    @Override
-    public void delete(Long id) {
-        try (Session session = factory.openSession()) {
-            session.beginTransaction();
-            Brand read = read(id);
-            if (read != null) {
-                session.delete(read(id));
-                session.getTransaction().commit();
-            } else {
-                System.out.println("Brand not found, id = " + id);
-            }
-        }
-    }
+
+//    public void delete(Long id) {
+//        try (Session session = factory.openSession()) {
+//            session.beginTransaction();
+//            Brand read = read(id);
+//            if (read != null) {
+//                session.delete(read(id));
+//                session.getTransaction().commit();
+//            } else {
+//                System.out.println("Brand not found, id = " + id);
+//            }
+//        }
+//    }
 
     public List<Brand> readSqlQuery(String sqlQuery) {
         try (Session session = factory.openSession()) {
@@ -108,17 +111,7 @@ public class BrandDAO implements DAO<Brand, Long> {
 
     }
 
-    public void readHQ2() {
-        try (Session session = factory.openSession()) {
-            Query sqlQuery = session.getNamedQuery("brand.findAll" );
-            List resultList = sqlQuery.getResultList();
-            for (Object o : resultList) {
-                System.out.println(o);
-            }
-        }
 
-
-    }
 
 
     public List<Brand> criteriaExample() {

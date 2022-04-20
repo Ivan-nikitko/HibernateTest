@@ -3,11 +3,12 @@ package pl.nikitko.model;
 import pl.nikitko.model.api.WheelDrive;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 
-@Table(name = "owner", schema = "application")
+@Table(name = "owners", schema = "application")
 @Entity
 public class Owner {
     @Id
@@ -17,41 +18,56 @@ public class Owner {
     @Column(name = "first_name")
     private String firstName;
 
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "car",
+            joinColumns = {@JoinColumn(name = "owner_id", referencedColumnName = "id")})
+    @MapKeyColumn(name = "vin")
+    @Column(name = "car_model")
+    private Map<Integer, String> carsModelByVin;
+
+
     @MapKey(name = "vin")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
     private Map<Integer, Car> carsByVin;
 
-    @ElementCollection
-    @CollectionTable(name = "owner_car_mapping",
-            joinColumns = {@JoinColumn(name = "owner_id", referencedColumnName = "id")})
-    @MapKeyColumn(name = "vin")
-    @Column (name = "car_model")
-    private Map<Integer, String> carsModelByVin;
 
-
-
+    @MapKeyTemporal(TemporalType.DATE)
+    @MapKey(name = "createdOn")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
-    @MapKeyJoinColumn(name = "brand_id")
-    private Map<Brand, Car> carMap;
+    private Map<Date, Car> carsByDate;
 
 
-    //@ElementCollection
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
     @MapKeyEnumerated(EnumType.STRING)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
     @MapKeyColumn(name = "wheelDrive")
-    private Map<WheelDrive, Car> carsByWD ;
+    private Map<WheelDrive, Car> carsByWD;
+
+
+
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "owner")
+    @MapKeyJoinColumns({@MapKeyJoinColumn(name = "brand_id1"),@MapKeyJoinColumn(name = "brand_id2")})
+    private Map<Brand, Car> carsByBrand;
+
 
     @OneToMany(mappedBy = "owner")
     private List<Car> carList;
+
+
+    public Map<Date, Car> getCarsByDate() {
+        return carsByDate;
+    }
+
+    public Map<Integer, String> getCarsModelByVin() {
+        return carsModelByVin;
+    }
 
     public Map<WheelDrive, Car> getCarsByWD() {
         return carsByWD;
     }
 
-
-
-    public Map<Brand, Car> getCarMap() {
-        return carMap;
+    public Map<Brand, Car> getCarsByBrand() {
+        return carsByBrand;
     }
 
     public void setCarsByVin(Map<Integer, Car> cars) {
@@ -78,6 +94,7 @@ public class Owner {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
+
 
     @Override
     public String toString() {

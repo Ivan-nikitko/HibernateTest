@@ -1,25 +1,30 @@
 package pl.nikitko.model;
 
+import pl.nikitko.model.api.BrandId;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
-@NamedQueries({
-        @NamedQuery(name = "brand.findAll", query = "from Brand B"),
-        @NamedQuery(name = "brand.findByName",
-                query = "from Brand b where b.name=:name"),
-})
 
 
 @Table(name = "brand", schema = "application")
 @Entity
+@IdClass(BrandId.class)
 public class Brand {
+
     @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
-    private Long id;
+    private Long firstIdPart;
+
+    @Id
+    private Long secondIdPart;
+
     @Column
     private String name;
     @Column
     private String country;
+
+
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "brand")
     private List<Car> carList;
@@ -28,17 +33,19 @@ public class Brand {
     }
 
 
+    public void setFirstIdPart(Long firstIdPart) {
+        this.firstIdPart = firstIdPart;
+    }
+
+    public void setSecondIdPart(Long secondIdPart) {
+        this.secondIdPart = secondIdPart;
+    }
+
     public List<Car> getCarList() {
         return carList;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public Long getId() {
-        return id;
-    }
 
     public String getName() {
         return name;
@@ -59,9 +66,9 @@ public class Brand {
     @Override
     public String toString() {
         return "Brand{" +
-                "id=" + id +
                 ", name='" + name + '\'' +
                 ", country='" + country + '\'' +
                 '}';
     }
+
 }

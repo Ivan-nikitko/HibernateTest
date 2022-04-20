@@ -12,16 +12,18 @@
         <property name="connection.password">7658392**</property> <!-- DB Password -->
         <property name="default_schema">application</property>
 
-        <property name="dialect">org.hibernate.dialect.PostgreSQL94Dialect</property> <!-- DB Dialect -->
-        <property name="hbm2ddl.auto">create</property> <!-- create / create-drop / update -->
+        <property name="dialect">org.hibernate.dialect.PostgreSQL9Dialect</property> <!-- DB Dialect -->
+        <property name="hbm2ddl.auto">create-drop</property> <!-- create / create-drop / update -->
 
         <property name="show_sql">true</property> <!-- Show SQL in console -->
-        <!--property name="format_sql">true</property--> <!-- Show SQL formatted -->
+        <property name="format_sql">true</property> <!-- Show SQL formatted -->
+        <property name="hibernate.current_session_context_class">thread</property>
 
         <mapping class="pl.nikitko.model.Brand"></mapping>
         <mapping class="pl.nikitko.model.Car"></mapping>
-        <mapping class="pl.nikitko.model.Engine"></mapping>
-        <mapping class="pl.nikitko.model.Owner"></mapping>
+        <mapping class="pl.nikitko.model.api.Engine"/>
+        <mapping class="pl.nikitko.model.DieselEngine"/>
+        <mapping class="pl.nikitko.model.Owner"/>
         <!--mapping resource="pl/nikitko/model/Brand.hbm.xml"/-->
 
     </session-factory>
