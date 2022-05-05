@@ -2,15 +2,14 @@ package pl.nikitko.dao;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.graph.RootGraph;
 import org.hibernate.query.Query;
 import pl.nikitko.dao.api.DAO;
 import pl.nikitko.model.Car;
 import pl.nikitko.model.Owner;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -38,6 +37,30 @@ public class OwnerDAO implements DAO<Owner, Long> {
             return result;
         }
     }
+
+
+    public Owner readWithEntityGraph(Long id) {
+        try (Session session = factory.openSession()) {
+//            RootGraph<?> graph = session.createEntityGraph(Owner.class);
+//            graph.addAttributeNodes("carList");
+            Owner result = session.find(Owner.class, id,
+                    Collections.singletonMap("javax.persistence.fetchgraph", session.getEntityGraph("user.carList")));
+            return result;
+        }
+    }
+
+
+    public Owner readWithCriteriaAPI(Long id) {
+        Session session = factory.openSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Owner> query = builder.createQuery(Owner.class);
+        Root<Owner> root = query.from(Owner.class);
+        root.fetch("carList", JoinType.LEFT); //!!!
+        CriteriaQuery<Owner> criteriaQuery =
+                query.select(root).where(builder.and(builder.equal(root.get("id"), 1L)));
+       return session.createQuery(criteriaQuery).getSingleResult();
+    }
+
 
     @Override
     public void update(Owner owner) {

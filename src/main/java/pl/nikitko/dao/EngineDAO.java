@@ -4,10 +4,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import pl.nikitko.dao.api.DAO;
 import pl.nikitko.model.DieselEngine;
+import pl.nikitko.model.api.Engine;
 import pl.nikitko.model.api.EngineId;
 
 
-public class EngineDAO implements DAO<DieselEngine, Long> {
+public class EngineDAO implements DAO<Engine, Long> {
     private final SessionFactory factory;
 
     public EngineDAO(SessionFactory factory) {
@@ -16,10 +17,10 @@ public class EngineDAO implements DAO<DieselEngine, Long> {
 
 
     @Override
-    public void create(DieselEngine dieselEngine) {
+    public void create(Engine engine) {
         try (Session session = factory.openSession()) {
             session.beginTransaction();
-            session.save(dieselEngine);
+            session.save(engine);
             session.getTransaction().commit();
         }
     }
@@ -37,10 +38,10 @@ public class EngineDAO implements DAO<DieselEngine, Long> {
     }
 
     @Override
-    public void update(DieselEngine dieselEngine) {
+    public void update(Engine engine) {
         try (Session session = factory.openSession()) {
             session.beginTransaction();
-            session.update(dieselEngine);
+            session.update(engine);
             session.getTransaction().commit();
         }
     }

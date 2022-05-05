@@ -2,16 +2,19 @@ package pl.nikitko.model;
 
 import pl.nikitko.model.api.Engine;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.List;
 
 
-@Table(name = "diesel_engines", schema = "application")
+@Table(name = "petrol_engines", schema = "application")
 @Entity
-@DiscriminatorValue("Diesel")
-public class DieselEngine extends Engine {
+public class PetrolEngine extends Engine {
 
-
+    @Column
+    private Integer OctanFuelNumber;
 
     @OneToMany(mappedBy = "engine")
     private List<Car> cars = new java.util.ArrayList<>();
@@ -25,8 +28,7 @@ public class DieselEngine extends Engine {
     }
 
 
-
-    public DieselEngine() {
+    public PetrolEngine() {
     }
 
 

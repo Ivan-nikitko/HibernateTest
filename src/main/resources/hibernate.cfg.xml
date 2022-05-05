@@ -9,7 +9,7 @@
         <property name="connection.url">jdbc:postgresql://localhost:5432/CayenneTest</property> <!-- BD Mane -->
         <property name="connection.driver_class">org.postgresql.Driver</property> <!-- DB Driver -->
         <property name="connection.username">postgres</property> <!-- DB User -->
-        <property name="connection.password">7658392**</property> <!-- DB Password -->
+        <property name="connection.password">******</property> <!-- DB Password -->
         <property name="default_schema">application</property>
 
         <property name="dialect">org.hibernate.dialect.PostgreSQL9Dialect</property> <!-- DB Dialect -->
@@ -23,6 +23,7 @@
         <mapping class="pl.nikitko.model.Car"></mapping>
         <mapping class="pl.nikitko.model.api.Engine"/>
         <mapping class="pl.nikitko.model.DieselEngine"/>
+        <mapping class="pl.nikitko.model.PetrolEngine"/>
         <mapping class="pl.nikitko.model.Owner"/>
         <!--mapping resource="pl/nikitko/model/Brand.hbm.xml"/-->
 

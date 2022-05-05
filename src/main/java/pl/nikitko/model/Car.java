@@ -1,5 +1,6 @@
 package pl.nikitko.model;
 
+import pl.nikitko.model.api.Engine;
 import pl.nikitko.model.api.WheelDrive;
 
 import javax.persistence.*;
@@ -19,7 +20,7 @@ public class Car {
     @Column
     private int vin;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "brand_id1")
     @JoinColumn(name = "brand_id2")
     private Brand brand;
@@ -28,7 +29,7 @@ public class Car {
     @ManyToOne
     @JoinColumn(name = "engine_firstidpart")
     @JoinColumn(name = "engine_secondidpart")
-    private DieselEngine dieselEngine;
+    private Engine engine;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn (name = "owner_id")
@@ -71,13 +72,12 @@ public class Car {
     }
 
 
-
-    public DieselEngine getEngine() {
-        return dieselEngine;
+    public Engine getEngine() {
+        return engine;
     }
 
-    public void setEngine(DieselEngine dieselEngine) {
-        this.dieselEngine = dieselEngine;
+    public void setEngine(Engine engine) {
+        this.engine = engine;
     }
 
     public void setCarModel(String carModel) {
@@ -111,9 +111,10 @@ public class Car {
                 ", carModel='" + carModel + '\'' +
                 ", vin=" + vin +
                 ", brand=" + brand +
-                ", engine=" + dieselEngine +
+                ", engine=" + engine +
               //  ", owner=" + owner +
                 ", wheelDrive=" + wheelDrive +
+                ", createdOn=" + createdOn +
                 '}';
     }
 }

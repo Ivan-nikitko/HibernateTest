@@ -4,12 +4,15 @@ import pl.nikitko.model.api.EngineId;
 
 import javax.persistence.*;
 
-//@Entity
-@MappedSuperclass()
-//@Inheritance (strategy = InheritanceType.TABLE_PER_CLASS)
+@Entity
+@Inheritance (strategy = InheritanceType.JOINED)
+//@MappedSuperclass()
 public abstract class Engine {
 
-    private Integer power;
+    @Column(name = "engine_model")
+    protected String engineModel;
+
+    protected Integer power;
 
     @EmbeddedId
     protected EngineId id;
@@ -23,6 +26,10 @@ public abstract class Engine {
 
     public void setId(EngineId id) {
         this.id = id;
+    }
+
+    public void setEngineModel(String engineModel) {
+        this.engineModel = engineModel;
     }
 
     public Integer getPower() {

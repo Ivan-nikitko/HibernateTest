@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 
+@NamedEntityGraph(name = "user.carList", attributeNodes = @NamedAttributeNode("carList"))
 @Table(name = "owners", schema = "application")
 @Entity
 public class Owner {
@@ -18,6 +19,7 @@ public class Owner {
     @Column(name = "first_name")
     private String firstName;
 
+/*
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "car",
@@ -49,10 +51,15 @@ public class Owner {
     @MapKeyJoinColumns({@MapKeyJoinColumn(name = "brand_id1"),@MapKeyJoinColumn(name = "brand_id2")})
     private Map<Brand, Car> carsByBrand;
 
+*/
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner",cascade = CascadeType.REMOVE)
     private List<Car> carList;
 
+    public List<Car> getCarList() {
+        return carList;
+    }
+/*
 
     public Map<Date, Car> getCarsByDate() {
         return carsByDate;
@@ -78,6 +85,7 @@ public class Owner {
         return carsByVin;
     }
 
+*/
 
     public Long getId() {
         return id;
@@ -101,7 +109,7 @@ public class Owner {
         return "Owner{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
-                ", cars=" + carsByVin +
+                ", cars=" + carList +
                 '}';
     }
 }

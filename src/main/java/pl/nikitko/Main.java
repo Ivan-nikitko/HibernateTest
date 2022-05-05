@@ -2,11 +2,9 @@ package pl.nikitko;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import pl.nikitko.dao.BrandDAO;
-import pl.nikitko.dao.CarDAO;
 import pl.nikitko.dao.OwnerDAO;
 import pl.nikitko.model.Brand;
 import pl.nikitko.model.Car;
@@ -27,9 +25,9 @@ public class Main {
         OwnerDAO ownerDAO = new OwnerDAO(sessionFactory);
         BrandDAO brandDAO = new BrandDAO(sessionFactory);
 
-        generateData(sessionFactory);
+            generateData(sessionFactory);
 
-
+/*
         System.out.println("*****************************");
 
         Owner owner = ownerDAO.read(1L);
@@ -47,11 +45,11 @@ public class Main {
         System.out.println("************ entriesByWD *****************");
 
         Set<Map.Entry<WheelDrive, Car>> entriesWD = owner.getCarsByWD().entrySet();
-        if (!entriesWD.isEmpty()){
+        if (!entriesWD.isEmpty()) {
             System.out.println(entriesWD.size());
         }
         for (Map.Entry<WheelDrive, Car> wheelDriveCarEntry : entriesWD) {
-            System.out.println(wheelDriveCarEntry.getKey()+ " || "+wheelDriveCarEntry.getValue());
+            System.out.println(wheelDriveCarEntry.getKey() + " || " + wheelDriveCarEntry.getValue());
         }
 
 
@@ -71,12 +69,22 @@ public class Main {
 
         Query select_e_from_engine_e;
         try (Session session = sessionFactory.openSession()) {
-
             List select_en_from_engine_en = session.createQuery("select en from Engine en").list();
-
         }
 
 
+//        System.out.println("************  readWithEntityGraph *****************");
+//        Owner owner1 = ownerDAO.readWithEntityGraph(1L);
+//        owner1.getCarList().stream().forEach(System.out::println);
+//        System.out.println("************  *****************");
+
+        Owner owner2 = ownerDAO.readWithCriteriaAPI(1L);
+        System.out.println("************  readWithCriteriaAPIEntityGraph *****************");
+        owner2.getCarList().stream().forEach(System.out::println);
+        System.out.println("************  *****************");*/
+
+
+        ownerDAO.delete(1L);
     }
 
 

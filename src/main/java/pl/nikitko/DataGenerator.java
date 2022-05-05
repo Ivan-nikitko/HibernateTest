@@ -42,11 +42,16 @@ public class DataGenerator {
 
     public void generateEngines() {
         for (int i = 0; i < 10; i++) {
+            PetrolEngine petrolEngine = new PetrolEngine();
             DieselEngine dieselEngine = new DieselEngine();
             dieselEngine.setId(new EngineId((long)i,i+10L));
-            dieselEngine.setEngineModel("E_Model_" + i);
+            petrolEngine.setId(new EngineId(i+10L,(long)i));
+            dieselEngine.setEngineModel("Diesel_Model_" + i);
+            petrolEngine.setEngineModel("Petrol_Model_" + i);
             dieselEngine.setPower(i*3+50);
+            petrolEngine.setPower(i*3+50);
             engineDAO.create(dieselEngine);
+            engineDAO.create(petrolEngine);
         }
     }
 
